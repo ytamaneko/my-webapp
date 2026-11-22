@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "my-webapp",
+  "compatibility_date": "2026-11-21",
+  "main": "./worker/index.ts",
+  "upload_source_maps": true,
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  }
+}
