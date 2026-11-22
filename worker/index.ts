@@ -424,8 +424,23 @@ export default {
       }
 
       return new Response('Not Found', { status: 404 })
-    } catch {
-      return json({ error: 'サーバー内部でエラーが発生しました' }, 500)
+    } catch (error) {
+      console.error('API ERROR:', {
+        path: url.pathname,
+        name: error instanceof Error
+          ? error.name
+          : 'UnknownError',
+        message: error instanceof Error
+          ? error.message
+          : String(error),
+        stack: error instanceof Error
+          ? error.stack
+          : undefined,
+      })
+
+      return json({
+        error: 'サーバー内部でエラーが発生しました',
+      }, 500)
     }
   },
 } satisfies ExportedHandler<Env>
