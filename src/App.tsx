@@ -364,7 +364,7 @@ async function deleteMemo(id: number) {
               className="app-menu-link"
               onClick={() => setMenuOpen(false)}
             >
-              ねこぜ競技場へ行く
+              🐴ねこぜ競技場へ行く
             </a>
 
             <a
@@ -374,7 +374,7 @@ async function deleteMemo(id: number) {
               className="app-menu-link"
               onClick={() => setMenuOpen(false)}
             >
-              筐体に100円入れる
+              🕹️筐体に100円入れる
             </a>
           </nav>
         )}
