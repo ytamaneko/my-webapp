@@ -109,3 +109,48 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* パスワード変更画面 */
+.password-change-panel {
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.password-change-panel h2 {
+  margin-top: 0;
+}
+
+.password-change-panel p {
+  font-size: 14px;
+  color: #666666;
+}
+
+.password-change-panel input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 7px;
+  font-size: 15px;
+}
+
+.password-change-panel button {
+  padding: 12px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.password-change-panel button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -64,6 +64,12 @@ function App() {
 
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const [showPasswordChange, setShowPasswordChange] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const [passwordChanging, setPasswordChanging] = useState(false)
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null)
@@ -223,6 +229,54 @@ useEffect(() => {
     }
 
     setMessage('ログアウトしました')
+  }
+
+
+  async function changePassword() {
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      setMessage('すべての項目を入力してください')
+      return
+    }
+
+    if (newPassword.length < 8 || newPassword.length > 72) {
+      setMessage('新しいパスワードは8～72文字にしてください')
+      return
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setMessage('新しいパスワードが一致しません')
+      return
+    }
+
+    if (currentPassword === newPassword) {
+      setMessage('現在と異なるパスワードを設定してください')
+      return
+    }
+
+    setPasswordChanging(true)
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+        current_password: currentPassword,
+      })
+
+      if (error) {
+        setMessage('パスワードを変更できませんでした：' + error.message)
+        return
+      }
+
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmNewPassword('')
+      setShowPasswordChange(false)
+
+      setMessage('パスワードを変更しました！次回から新しいパスワードでログインしてください。')
+    } catch {
+      setMessage('パスワード変更中にエラーが発生しました')
+    } finally {
+      setPasswordChanging(false)
+    }
   }
 
   async function addMemo() {
@@ -435,6 +489,74 @@ async function deleteMemo(id: number) {
             ログアウト
           </button>
 
+          {/* パスワード変更ボタン */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowPasswordChange(open => !open)
+              setMessage('')
+            }}
+          >
+            {showPasswordChange
+              ? 'パスワード変更を閉じる'
+              : 'パスワードを変更する'}
+          </button>
+
+          {/* パスワード変更画面 */}
+          {showPasswordChange && (
+            <section className="password-change-panel">
+              <h2>パスワード変更</h2>
+
+              <p>現在のパスワードと新しいパスワードを入力してください。</p>
+
+              <input
+                type="password"
+                autoComplete="current-password"
+                placeholder="現在のパスワード"
+                value={currentPassword}
+                onChange={e => setCurrentPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                autoComplete="new-password"
+                placeholder="新しいパスワード（8文字以上）"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                autoComplete="new-password"
+                placeholder="新しいパスワード（確認）"
+                value={confirmNewPassword}
+                onChange={e => setConfirmNewPassword(e.target.value)}
+              />
+
+              <button
+                type="button"
+                onClick={changePassword}
+                disabled={passwordChanging}
+              >
+                {passwordChanging
+                  ? '変更中...'
+                  : 'パスワードを変更する'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPasswordChange(false)
+                  setCurrentPassword('')
+                  setNewPassword('')
+                  setConfirmNewPassword('')
+                }}
+              >
+                キャンセル
+              </button>
+            </section>
+          )}
+              
           <h2>メモを追加</h2>
 
           <input
