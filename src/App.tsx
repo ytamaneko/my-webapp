@@ -62,6 +62,8 @@ function App() {
   const [memos, setMemos] = useState<Memo[]>([])
   const [message, setMessage] = useState('')
 
+  const [menuOpen, setMenuOpen] = useState(false)
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null)
@@ -280,6 +282,49 @@ async function deleteMemo(id: number) {
 
   return (
     <main className="container">
+      {/* 画面右上のハンバーガーメニュー */}
+      <div className="app-menu">
+        <button
+          type="button"
+          className="app-menu-button"
+          aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
+          aria-expanded={menuOpen}
+          aria-controls="app-side-menu"
+          onClick={() => setMenuOpen(open => !open)}
+        >
+          <span aria-hidden="true">
+            {menuOpen ? '×' : '☰'}
+          </span>
+        </button>
+
+        {menuOpen && (
+          <nav
+            id="app-side-menu"
+            className="app-menu-panel"
+            aria-label="外部リンク"
+          >
+            <a
+              href="https://paddock-racing.snugmule23.chatgpt.site/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="app-menu-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              ねこぜ競技場へ行く
+            </a>
+
+            <a
+              href="https://after-hours-kakuto.snugmule23.chatgpt.site/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="app-menu-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              筐体に100円入れる
+            </a>
+          </nav>
+        )}
+      </div>
       <h1>マイメモアプリ</h1>
       <p>React + Supabase + Cloudflare</p>
 
