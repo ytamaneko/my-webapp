@@ -380,7 +380,6 @@ async function deleteMemo(id: number) {
         )}
       </div>
       <h1>マイメモアプリ</h1>
-      <p>React + Supabase + Cloudflare</p>
 
       {message && <p>{message}</p>}
 
